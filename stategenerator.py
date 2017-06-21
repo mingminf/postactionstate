@@ -5,6 +5,7 @@ from PyQt5 import QtPrintSupport
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtCore import Qt
 from ext import *
+from player import *
 
 class Main(QtWidgets.QMainWindow):
     def __init__(self,parent = None):
@@ -285,7 +286,12 @@ class Main(QtWidgets.QMainWindow):
         self.text.setTabStopWidth(33)
 
         # this is the field to write text
-        self.setCentralWidget(self.text)
+        #self.setCentralWidget(self.text)
+
+        #set the central widget to be the video player
+        self.centerComponent = centerComponent(self)
+        self.setCentralWidget(self.centerComponent)
+
 
         # Initialize a statusbar for the window
         self.statusbar = self.statusBar()
@@ -687,6 +693,23 @@ class Main(QtWidgets.QMainWindow):
         cell = table.cellAt(cursor)
         # Insert a new row at the cell's position
         table.insertColumns(cell.column(),1)
+
+
+class centerComponent(QWidget):
+    def __init__(self, parent=None):
+        super(centerComponent,self).__init__(parent)
+
+        self.player = Player([])
+
+        displayLayout = QVBoxLayout()
+        displayLayout.addWidget(self.player)
+
+        contentlayout = QHBoxLayout()
+        contentlayout.addLayout(displayLayout, 0)
+        if parent != None:
+            contentlayout.addWidget(parent.text)
+
+        self.setLayout(contentlayout)
 
 
 def main():
